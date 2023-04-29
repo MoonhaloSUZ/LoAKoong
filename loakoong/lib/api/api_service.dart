@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class ApiService {
   static const String charactername = 'CharacterName';
   static const String baseUrl =
-      'https://webtoon-crawler.nomadcoders.workers.dev';
+      'https://developer-lostark.game.onstove.com/characters/%EB%8B%AC%EA%B5%AC%EB%A3%BD/siblings';
 
   static Future<List<LoAKoongModel>> getTodaysToons() async {
     List<LoAKoongModel> webtoonInstances = [];
