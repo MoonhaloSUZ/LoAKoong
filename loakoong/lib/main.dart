@@ -5,10 +5,8 @@ import 'package:loakoong/model/loakoong_model.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
-  String initialUserName = 'your_default_username'; // 초기 사용자 이름 설정
-  runApp(LoAKoongApp(
-    userName: initialUserName,
-  ));
+  // 초기 사용자 이름 설정
+  runApp(const LoAKoongApp());
 }
 
 class MyHttpOverrides extends HttpOverrides {
@@ -20,20 +18,32 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-class LoAKoongApp extends StatefulWidget {
+class LoAKoongApp extends StatelessWidget {
+  const LoAKoongApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: LoAKoongScreen(
+        userName: '',
+      ),
+    );
+  }
+}
+
+class LoAKoongScreen extends StatefulWidget {
   late String userName;
 
-  LoAKoongApp({
+  LoAKoongScreen({
     Key? key,
     required this.userName,
   }) : super(key: key);
 
   @override
-  State<LoAKoongApp> createState() => _LoAKoongAppState();
+  State<LoAKoongScreen> createState() => _LoAKoongScreenState();
 }
 
-class _LoAKoongAppState extends State<LoAKoongApp> {
-  late Future<LoAKoongModel> loakoong;
+class _LoAKoongScreenState extends State<LoAKoongScreen> {
   String userInput = '';
 
   final sendController = TextEditingController();
@@ -43,9 +53,11 @@ class _LoAKoongAppState extends State<LoAKoongApp> {
     super.initState();
   }
 
-  void sendUserName() {
-    widget.userName = userInput;
-    loakoong = LostArk.getCharacterProfile(widget.userName);
+  sendUserName() {
+    widget.userName = sendController.text;
+    Future<LoAKoongModel> loakoong;
+
+    loakoong = LostArkAPI.getCharacterProfile(widget.userName);
   }
 
   // This widget is the root of your application.
@@ -74,36 +86,39 @@ class _LoAKoongAppState extends State<LoAKoongApp> {
                     padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
                     child: Row(
                       children: [
-                        TextField(
-                          controller: sendController,
-                          onChanged: (text) {
-                            setState(() {
-                              userInput = text;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            labelText: '로아쿵',
-                            hintText: '캐릭터명',
-                            labelStyle:
-                                TextStyle(color: Colors.deepPurpleAccent),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(
-                                  width: 1, color: Colors.deepPurpleAccent),
+                        SizedBox(
+                          width: 200,
+                          child: TextField(
+                            controller: sendController,
+                            onChanged: (text) {
+                              setState(() {
+                                userInput = text;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              labelText: '로아쿵',
+                              hintText: '캐릭터명',
+                              labelStyle:
+                                  TextStyle(color: Colors.deepPurpleAccent),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide(
+                                    width: 12, color: Colors.deepPurpleAccent),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                borderSide: BorderSide(
+                                    width: 12, color: Colors.deepPurpleAccent),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                              ),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                              borderSide: BorderSide(
-                                  width: 1, color: Colors.deepPurpleAccent),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
-                            ),
+                            keyboardType: TextInputType.text,
                           ),
-                          keyboardType: TextInputType.text,
                         ),
                         ElevatedButton(
                           onPressed: sendUserName,
@@ -112,17 +127,17 @@ class _LoAKoongAppState extends State<LoAKoongApp> {
                       ],
                     ),
                   ),
-                  FutureBuilder(
-                    future: loakoong,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return profileColumn(snapshot);
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}에러!!");
-                      }
-                      return const CircularProgressIndicator();
-                    },
-                  )
+                  // FutureBuilder(
+                  //   future: sendUserName(),
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.hasData) {
+                  //       return profileColumn(snapshot);
+                  //     } else if (snapshot.hasError) {
+                  //       return Text("${snapshot.error}에러!!");
+                  //     }
+                  //     return const CircularProgressIndicator();
+                  //   },
+                  // )
                 ],
               ),
             ),
