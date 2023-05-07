@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'auth.dart';
 import 'package:loakoong/model/loakoong_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -7,8 +8,7 @@ class LostArkAPI {
   static Future<LoAKoongModel> getCharacterProfile(String userName) async {
     Map<String, String> header = {
       'accept': 'application/json',
-      'authorization':
-          'bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9.eyJpc3MiOiJodHRwczovL2x1ZHkuZ2FtZS5vbnN0b3ZlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbHVkeS5nYW1lLm9uc3RvdmUuY29tL3Jlc291cmNlcyIsImNsaWVudF9pZCI6IjEwMDAwMDAwMDAwMTUyODIifQ.ECtY6DY8rNorVP7DwuiSYUmqWwm83QN6egHUPI-K2C7PPDJ4YRrpp3DkaxTJCDymLbUcj-Kt1P6ferw6tCE9MUj-gNRVXMjgBBdNCezlT9yqhoiHYjjAT6BvzhfiOdGrxSh6ADExeJcU0Zj8UCAdUzwZAazI49ZmaytHkXR9NDMdHzmPB7MW0SmHKt7EzKnSbiGaOAbr2bEKvHAUSpmsVbbYyqQq3jxN_BhAeMtRWP2SQVHngYxDjeUJ_RqfHR9_BTSDiRokKzClUmn9wiBr9-2hYzvnyBwIpwNM2ziRhJnpMNZqE6R0vFiGxQKP5VMXAeGnisMAW2aggJ25kuIf1Q',
+      'authorization': 'bearer $loaAuth',
     };
 
     var loaurl = 'https://developer-lostark.game.onstove.com';
