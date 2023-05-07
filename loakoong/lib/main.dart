@@ -54,10 +54,14 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
   }
 
   sendUserName() {
-    widget.userName = sendController.text;
-    Future<LoAKoongModel> loakoong;
+    if (sendController.text == '') {
+      return;
+    } else {
+      widget.userName = sendController.text;
+      Future<LoAKoongModel> loakoong;
 
-    loakoong = LostArkAPI.getCharacterProfile(widget.userName);
+      loakoong = LostArkAPI.getCharacterProfile(widget.userName);
+    }
   }
 
   // This widget is the root of your application.
@@ -81,13 +85,14 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Text(userInput),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 200,
+                          width: 300,
+                          height: 50,
                           child: TextField(
                             controller: sendController,
                             onChanged: (text) {
@@ -95,34 +100,46 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                                 userInput = text;
                               });
                             },
+                            textAlign: TextAlign.center,
                             decoration: const InputDecoration(
                               labelText: '로아쿵',
-                              hintText: '캐릭터명',
+                              hintText: '닉네임',
                               labelStyle:
                                   TextStyle(color: Colors.deepPurpleAccent),
+                              hintStyle: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black38,
+                              ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
                                 borderSide: BorderSide(
-                                    width: 12, color: Colors.deepPurpleAccent),
+                                    width: 1, color: Colors.deepPurpleAccent),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
                                 borderSide: BorderSide(
-                                    width: 12, color: Colors.deepPurpleAccent),
+                                    width: 1, color: Colors.deepPurpleAccent),
                               ),
                               border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)),
                               ),
                             ),
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.name,
                           ),
+                        ),
+                        const SizedBox(
+                          width: 10,
                         ),
                         ElevatedButton(
                           onPressed: sendUserName,
-                          child: const Text('확인'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurpleAccent,
+                            fixedSize: const Size.square(48),
+                          ),
+                          child: const Text('검색'),
                         )
                       ],
                     ),
