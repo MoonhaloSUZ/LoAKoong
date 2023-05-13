@@ -45,6 +45,7 @@ class LoAKoongScreen extends StatefulWidget {
 
 class _LoAKoongScreenState extends State<LoAKoongScreen> {
   String userInput = '';
+  bool isSearched = false;
 
   final sendController = TextEditingController();
 
@@ -58,10 +59,19 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
       return;
     } else {
       widget.userName = sendController.text;
-      Future<LoAKoongModel> loakoong;
 
-      loakoong = LostArkAPI.getCharacterProfile(widget.userName);
+      Future<LoAKoongModel> characterData =
+          LostArkAPI.getCharacterProfile(widget.userName);
+
+      return characterData;
     }
+  }
+
+  justNothing() {
+    setState(() {
+      isSearched = false;
+    });
+    return;
   }
 
   // This widget is the root of your application.
@@ -144,13 +154,14 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                       ],
                     ),
                   ),
+                  const Text('test'),
                   // FutureBuilder(
-                  //   future: sendUserName(),
+                  //   future: isSearched ? sendUserName() : justNothing(),
                   //   builder: (context, snapshot) {
                   //     if (snapshot.hasData) {
                   //       return profileColumn(snapshot);
                   //     } else if (snapshot.hasError) {
-                  //       return Text("${snapshot.error}에러!!");
+                  //       return Text("${snapshot.error}오!! 류!!");
                   //     }
                   //     return const CircularProgressIndicator();
                   //   },
@@ -170,8 +181,7 @@ Widget profileColumn(snapshot) {
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      Text('캐릭터명:${snapshot.data!.CharacterName}',
-          style: const TextStyle(fontSize: 20)),
+      Text('$snapshot', style: const TextStyle(fontSize: 20)),
     ],
   );
 }
