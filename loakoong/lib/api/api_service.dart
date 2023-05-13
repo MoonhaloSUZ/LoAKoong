@@ -15,35 +15,24 @@ class LostArkAPI {
 
     final url = Uri.parse("$loaurl/characters/$userName/siblings");
     final response = await http.get(url, headers: header);
+    final responsebody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      // print('sucess');
-      // print(jsonDecode(response.body));
-      return LoAKoongModel.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Faild');
-    }
-  }
-}
+      //예외사항 : statusCode 200이 들어오더라도, jsonDecode(response.body)에 Null값이 들어올 수 있음
 
-/////////////////////
-class ApiService {
-  static const String charactername = 'CharacterName';
-  //late String userName;
-  static String baseUrl = 'https://developer-lostark.game.onstove.com/';
-
-  static Future<List<LoAKoongModel>> getUserData() async {
-    List<LoAKoongModel> webtoonInstances = [];
-    final url = Uri.parse('$baseUrl/$charactername');
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> webtoons = jsonDecode(response.body);
-      for (var webtoon in webtoons) {
-        webtoonInstances.add(LoAKoongModel.fromJson(webtoon));
+      if (responsebody != null) {
+        return LoAKoongModel.fromList(jsonDecode(response.body));
+      } else {
+        return LoAKoongModel(
+            serverName: '캐릭터를 찾을 수 없어요 Ooㅠ_ㅠoO',
+            characterName: '캐릭터를 찾을 수 없어요 Ooㅠ_ㅠoO',
+            characterLevel: 0,
+            characterClassName: '캐릭터를 찾을 수 없어요 Ooㅠ_ㅠoO',
+            itemAvgLevel: '캐릭터를 찾을 수 없어요 Ooㅠ_ㅠoO',
+            itemMaxLevel: '캐릭터를 찾을 수 없어요 Ooㅠ_ㅠoO');
       }
-      return webtoonInstances;
+    } else {
+      throw Exception('오오~류');
     }
-    throw Error();
   }
 }
