@@ -46,6 +46,7 @@ class LoAKoongScreen extends StatefulWidget {
 class _LoAKoongScreenState extends State<LoAKoongScreen> {
   String userInput = '';
   bool isSearched = false;
+  String apitest = '';
 
   final sendController = TextEditingController();
 
@@ -54,14 +55,21 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
     super.initState();
   }
 
-  sendUserName() {
-    if (sendController.text == '') {
+  sendUserName() async {
+    if (sendController.text.isEmpty) {
       return;
     } else {
-      widget.userName = sendController.text;
+      String userNametest = sendController.text;
 
-      Future<LoAKoongModel> characterData =
-          LostArkAPI.getCharacterProfile(widget.userName);
+      LoAKoongModel characterData =
+          await LostArkAPI.getCharacterProfile(userNametest);
+
+      setState(() {
+        apitest = characterData.characterName;
+        isSearched = true;
+      });
+
+      print(characterData.characterName);
 
       return characterData;
     }
@@ -154,18 +162,7 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                       ],
                     ),
                   ),
-                  const Text('test'),
-                  // FutureBuilder(
-                  //   future: isSearched ? sendUserName() : justNothing(),
-                  //   builder: (context, snapshot) {
-                  //     if (snapshot.hasData) {
-                  //       return profileColumn(snapshot);
-                  //     } else if (snapshot.hasError) {
-                  //       return Text("${snapshot.error}오!! 류!!");
-                  //     }
-                  //     return const CircularProgressIndicator();
-                  //   },
-                  // )
+                  Text(apitest),
                 ],
               ),
             ),
