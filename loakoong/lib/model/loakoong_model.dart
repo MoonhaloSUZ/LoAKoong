@@ -31,8 +31,11 @@ class LoAKoongModel {
       throw Exception('Empty response');
     }
 
-    final jsonData = jsonList.first as Map<String, dynamic>;
-    return LoAKoongModel.fromJson(jsonData);
+    final List<LoAKoongModel> modelList = jsonList.map((jsonData) {
+      return LoAKoongModel.fromJson(jsonData);
+    }).toList();
+
+    return modelList.first;
   }
 
   //named constructor 이용
