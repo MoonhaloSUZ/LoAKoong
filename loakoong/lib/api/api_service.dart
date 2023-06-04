@@ -15,13 +15,26 @@ class LostArkAPI {
 
     final url = Uri.parse("$loaurl/characters/$userName/siblings");
     final response = await http.get(url, headers: header);
-    final responsebody = jsonDecode(response.body);
+    //final responsebody = jsonDecode(response.body);
+
+    final responsebody = jsonDecode(response.body) as List<dynamic>;
 
     if (response.statusCode == 200) {
       //예외사항 : statusCode 200이 들어오더라도, jsonDecode(response.body)에 Null값이 들어올 수 있음
 
       if (responsebody != null) {
-        return LoAKoongModel.fromList(jsonDecode(response.body));
+        // responsebody
+        //     .sort((a, b) => b['ItemMaxLevel'].compareTo(a['ItemMaxLevel']));
+        responsebody.sort((a, b) => b['ItemMaxLevel']
+            .replaceAll(',', '')
+            .compareTo(a['ItemMaxLevel'].replaceAll(',', '')));
+
+        final characterNames =
+            responsebody.map((item) => item['CharacterName']).toList();
+
+        print(responsebody);
+
+        return LoAKoongModel.fromList(responsebody);
       } else {
         return LoAKoongModel(
             serverName: '캐릭터를 찾을 수 없어요 Ooㅠ_ㅠoO',
