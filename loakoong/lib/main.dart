@@ -46,7 +46,7 @@ class LoAKoongScreen extends StatefulWidget {
 class _LoAKoongScreenState extends State<LoAKoongScreen> {
   String userInput = '';
   bool isSearched = false;
-  String apitest = '';
+  String printtest = '';
 
   final sendController = TextEditingController();
 
@@ -61,17 +61,17 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
     } else {
       String userNametest = sendController.text;
 
-      LoAKoongModel characterData =
+      LoAKoongModel characterNameData =
           await LostArkAPI.getCharacterProfile(userNametest);
 
       setState(() {
-        apitest = characterData.characterName;
+        printtest = characterNameData.characterName;
         isSearched = true;
       });
 
-      print(characterData.characterName);
+      print(characterNameData.toString());
 
-      return characterData;
+      return characterNameData;
     }
   }
 
@@ -162,7 +162,7 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                       ],
                     ),
                   ),
-                  Text(apitest),
+                  Text(printtest),
                 ],
               ),
             ),
