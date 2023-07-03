@@ -44,6 +44,8 @@ class LoAKoongScreen extends StatefulWidget {
 }
 
 class _LoAKoongScreenState extends State<LoAKoongScreen> {
+  late Future<LoAKoongModel> loakoong;
+
   String userInput = '';
   bool isSearched = false;
   String printtest = '';
@@ -53,34 +55,36 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
   @override
   void initState() {
     super.initState();
+
+    loakoong = LostArkAPI.getCharacterProfile('달구룽');
   }
 
-  sendUserName() async {
-    if (sendController.text.isEmpty) {
-      return;
-    } else {
-      String userNametest = sendController.text;
+  // sendUserName() async {
+  //   if (sendController.text.isEmpty) {
+  //     return;
+  //   } else {
+  //     String userNametest = sendController.text;
 
-      LoAKoongModel characterNameData =
-          await LostArkAPI.getCharacterProfile(userNametest);
+  //     LoAKoongModel characterNameData =
+  //         await LostArkAPI.getCharacterProfile(userNametest);
 
-      setState(() {
-        printtest = characterNameData.characterName;
-        isSearched = true;
-      });
+  //     setState(() {
+  //       printtest = characterNameData.characterName;
+  //       isSearched = true;
+  //     });
 
-      print(characterNameData.toString());
+  //     print(characterNameData.toString());
 
-      return characterNameData;
-    }
-  }
+  //     return characterNameData;
+  //   }
+  // }
 
-  justNothing() {
-    setState(() {
-      isSearched = false;
-    });
-    return;
-  }
+  // justNothing() {
+  //   setState(() {
+  //     isSearched = false;
+  //   });
+  //   return;
+  // }
 
   // This widget is the root of your application.
   @override
@@ -109,7 +113,7 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 300,
+                          width: 250,
                           height: 50,
                           child: TextField(
                             controller: sendController,
@@ -151,8 +155,56 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                         const SizedBox(
                           width: 10,
                         ),
+                        // ElevatedButton(
+                        //   onPressed: sendUserName,
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.deepPurpleAccent,
+                        //     fixedSize: const Size.square(48),
+                        //   ),
+                        //   child: const Text('검색'),
+                        // )
                         ElevatedButton(
-                          onPressed: sendUserName,
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    scrollable: true,
+                                    title: const Text('List'),
+                                    content: SingleChildScrollView(
+                                      child: FutureBuilder(
+                                        future: loakoong,
+                                        builder: ((context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    snapshot.data!.toString(),
+                                                    style: const TextStyle(
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 15,
+                                                  ),
+                                                ]);
+                                          }
+                                          return const Text("캐릭터를 조회할 수 없어요");
+                                        }),
+                                      ),
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                          child: const Text("OK"),
+                                          onPressed: () {
+                                            // your code
+                                          })
+                                    ],
+                                  );
+                                });
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.deepPurpleAccent,
                             fixedSize: const Size.square(48),
