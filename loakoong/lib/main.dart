@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:loakoong/api/api_service.dart';
-import 'package:loakoong/model/loakoong_model.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
@@ -44,7 +43,7 @@ class LoAKoongScreen extends StatefulWidget {
 }
 
 class _LoAKoongScreenState extends State<LoAKoongScreen> {
-  late Future<LoAKoongModel> loakoong;
+  late Future<List<dynamic>> loakoong = LostArkAPI.getCharacterProfile('달구룽');
 
   String userInput = '';
   bool isSearched = false;
@@ -55,8 +54,6 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
   @override
   void initState() {
     super.initState();
-
-    loakoong = LostArkAPI.getCharacterProfile('달구룽');
   }
 
   // sendUserName() async {
@@ -64,18 +61,15 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
   //     return;
   //   } else {
   //     String userNametest = sendController.text;
+  //     if (isSearched == false) {
+  //       loakoong = LostArkAPI.getCharacterProfile(userNametest);
 
-  //     LoAKoongModel characterNameData =
-  //         await LostArkAPI.getCharacterProfile(userNametest);
+  //       setState(() {
+  //         isSearched = true;
+  //       });
+  //     }
 
-  //     setState(() {
-  //       printtest = characterNameData.characterName;
-  //       isSearched = true;
-  //     });
-
-  //     print(characterNameData.toString());
-
-  //     return characterNameData;
+  //     return;
   //   }
   // }
 
@@ -165,54 +159,44 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                         // )
                         ElevatedButton(
                           onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    scrollable: true,
-                                    title: const Text('List'),
-                                    content: SingleChildScrollView(
-                                      child: FutureBuilder(
-                                        future: loakoong,
-                                        builder: ((context, snapshot) {
-                                          if (snapshot.hasData) {
-                                            return Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    snapshot.data!.toString(),
-                                                    style: const TextStyle(
-                                                      fontSize: 15,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 15,
-                                                  ),
-                                                ]);
-                                          }
-                                          return const Text("캐릭터를 조회할 수 없어요");
-                                        }),
-                                      ),
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                          child: const Text("OK"),
-                                          onPressed: () {
-                                            // your code
-                                          })
-                                    ],
-                                  );
-                                });
+                            setState(() {
+                              loakoong =
+                                  LostArkAPI.getCharacterProfile(userInput);
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.deepPurpleAccent,
                             fixedSize: const Size.square(48),
                           ),
                           child: const Text('검색'),
-                        )
+                        ),
                       ],
                     ),
+                  ),
+                  FutureBuilder<List<dynamic>>(
+                    future: loakoong,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final data = snapshot.data ?? [];
+                        //return Text('데이터 로드 성공: $data');
+                        return Expanded(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(data[index].toString()),
+                              );
+                            },
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('데이터 로드 실패: ${snapshot.error}');
+                      }
+
+                      // 데이터 로딩 중인 경우 표시할 위젯
+                      return const CircularProgressIndicator();
+                    },
                   ),
                   Text(printtest),
                 ],
