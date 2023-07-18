@@ -102,7 +102,7 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
+                    padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -179,16 +179,14 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                       if (snapshot.hasData) {
                         final data = snapshot.data ?? [];
                         //return Text('데이터 로드 성공: $data');
-                        return Expanded(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: data.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(data[index].toString()),
-                              );
-                            },
-                          ),
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(data[index].toString()),
+                            );
+                          },
                         );
                       } else if (snapshot.hasError) {
                         return Text('데이터 로드 실패: ${snapshot.error}');
