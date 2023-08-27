@@ -44,18 +44,18 @@ class LoAKoongScreen extends StatefulWidget {
 
 class _LoAKoongScreenState extends State<LoAKoongScreen> {
   late Future<List<dynamic>> loakoong = LostArkAPI.getCharacterProfile('달구룽');
+  late List<bool> _select_character_list;
 
   String userInput = '';
   bool isSearched = false;
   String printtest = '';
-
-  bool _toggled = false;
 
   final sendController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _select_character_list = List.filled(50, false); //야매
   }
 
   // sendUserName() async {
@@ -209,10 +209,10 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                                 title: Text(
                                   data[index].toString(),
                                 ),
-                                value: _toggled,
+                                value: _select_character_list[index],
                                 onChanged: (value) {
                                   setState(() {
-                                    _toggled = value;
+                                    _select_character_list[index] = value;
                                   });
                                 },
                               );
