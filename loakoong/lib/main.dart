@@ -49,6 +49,8 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
   bool isSearched = false;
   String printtest = '';
 
+  bool _toggled = false;
+
   final sendController = TextEditingController();
 
   @override
@@ -102,7 +104,7 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 10.0),
+                    padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 50.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -158,6 +160,7 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                         //   child: const Text('검색'),
                         // )
                         ElevatedButton(
+                          //지금 필요한 기능 : 캐릭터 선택 버튼(각 리스트 옆에)), 캐릭터 선택 완료 버튼
                           onPressed: () {
                             setState(() {
                               loakoong =
@@ -173,28 +176,56 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                       ],
                     ),
                   ),
-                  FutureBuilder<List<dynamic>>(
-                    future: loakoong,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final data = snapshot.data ?? [];
-                        //return Text('데이터 로드 성공: $data');
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: data.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(data[index].toString()),
-                            );
-                          },
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('데이터 로드 실패: ${snapshot.error}');
-                      }
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        '선택완료 버튼',
+                      ),
+                    ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.pink.shade300,
+                      ),
+                    ),
+                    margin: const EdgeInsets.all(20),
+                    //width: 150,
+                    //height: 30,
+                    child: FutureBuilder<List<dynamic>>(
+                      future: loakoong,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final data = snapshot.data ?? [];
+                          //return Text('데이터 로드 성공: $data');
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: data.length,
+                            itemBuilder: (context, index) {
+                              return SwitchListTile(
+                                title: Text(
+                                  data[index].toString(),
+                                ),
+                                value: _toggled,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _toggled = value;
+                                  });
+                                },
+                              );
+                            },
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text('데이터 로드 실패: ${snapshot.error}');
+                        }
 
-                      // 데이터 로딩 중인 경우 표시할 위젯
-                      return const CircularProgressIndicator();
-                    },
+                        // 데이터 로딩 중인 경우 표시할 위젯
+                        return const CircularProgressIndicator();
+                      },
+                    ),
                   ),
                   Text(printtest),
                 ],
