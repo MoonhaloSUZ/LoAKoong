@@ -207,6 +207,8 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                                 onChanged: (value) {
                                   setState(() {
                                     _select_character_list[index] = value;
+
+                                    print(_select_character_list.indexOf(true));
                                   });
                                 },
                               );
@@ -215,7 +217,6 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                         } else if (snapshot.hasError) {
                           return const Text('캐릭터를 검색해주세요');
                         }
-
                         // 데이터 로딩 중인 경우 표시할 위젯
                         return const CircularProgressIndicator();
                       },
