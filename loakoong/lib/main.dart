@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:loakoong/api/api_service.dart';
+import 'screen/character_choice_screen.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
@@ -43,7 +44,7 @@ class LoAKoongScreen extends StatefulWidget {
 }
 
 class _LoAKoongScreenState extends State<LoAKoongScreen> {
-  late Future<List<dynamic>> loakoong = LostArkAPI.getCharacterProfile('달구룽');
+  late Future<List<dynamic>> loakoong = LostArkAPI.getCharacterProfile('');
   late List<bool> _select_character_list;
 
   String userInput = '';
@@ -104,7 +105,7 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 50.0),
+                    padding: const EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 30.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -160,11 +161,12 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                         //   child: const Text('검색'),
                         // )
                         ElevatedButton(
-                          //지금 필요한 기능 : 캐릭터 선택 버튼(각 리스트 옆에)), 캐릭터 선택 완료 버튼
                           onPressed: () {
                             setState(() {
                               loakoong =
                                   LostArkAPI.getCharacterProfile(userInput);
+                              _select_character_list = List.filled(50,
+                                  false); //야매222, 캐릭터가 선택되면 선택된 스위치 리스트가 초기화되도록
                             });
                           },
                           style: ElevatedButton.styleFrom(
@@ -175,14 +177,6 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                         ),
                       ],
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        '선택완료 버튼',
-                      ),
-                    ],
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -219,13 +213,26 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                             },
                           );
                         } else if (snapshot.hasError) {
-                          return Text('데이터 로드 실패: ${snapshot.error}');
+                          return const Text('캐릭터를 검색해주세요');
                         }
 
                         // 데이터 로딩 중인 경우 표시할 위젯
                         return const CircularProgressIndicator();
                       },
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const ScreenOfCharacterChoice()));
+                        },
+                        child: const Text("선택완료"),
+                      ),
+                    ],
                   ),
                   Text(printtest),
                 ],
