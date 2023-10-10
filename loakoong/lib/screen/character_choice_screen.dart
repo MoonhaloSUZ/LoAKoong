@@ -30,7 +30,7 @@ class ScreenOfCharacterChoice extends StatelessWidget {
           body: Column(
             children: [
               Text(
-                '$selectValue',
+                '$selectValue.to',
               ),
             ],
           )),
