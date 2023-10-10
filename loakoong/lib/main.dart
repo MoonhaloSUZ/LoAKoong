@@ -47,6 +47,9 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
   late Future<List<dynamic>> loakoong = LostArkAPI.getCharacterProfile('');
   late List<bool> _select_character_list;
 
+  List<int> selectValue = []; //스위치 리스트에서 ture값인 인덱스 추출
+  List<String> searchedCharacter = []; //각 인덱스의 캐릭터 명(다음 페이지에 넘겨줄 역할)
+
   String userInput = '';
   bool isSearched = false;
   String printtest = '';
@@ -57,6 +60,21 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
   void initState() {
     super.initState();
     _select_character_list = List.filled(50, false); //야매
+  }
+
+//스위치 리스트에서 선택된(ture인) 인덱스 값 추출하기
+  selectedList() {
+    for (int i = 0; i < _select_character_list.length; i++) {
+      if (_select_character_list[i] == true) {
+        selectValue.add(i);
+      }
+    }
+
+    if (selectValue.isNotEmpty) {
+      print("true의 모든 등장 위치는 $selectValue 입니다.");
+    } else {
+      print("true를 찾을 수 없습니다.");
+    }
   }
 
   // sendUserName() async {
@@ -74,13 +92,6 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
 
   //     return;
   //   }
-  // }
-
-  // justNothing() {
-  //   setState(() {
-  //     isSearched = false;
-  //   });
-  //   return;
   // }
 
   // This widget is the root of your application.
@@ -208,7 +219,8 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                                   setState(() {
                                     _select_character_list[index] = value;
 
-                                    print(_select_character_list.indexOf(true));
+                                    //print(data);
+                                    //print(searchedCharacter);
                                   });
                                 },
                               );
@@ -227,9 +239,21 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                     children: [
                       OutlinedButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
+                          selectedList();
+
+                          int testValue = 0;
+                          //새로운 사실을 알았다. onPressed 안에 함수를 순차적으로 실행시킬 수 있음.
+
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
                               builder: (BuildContext context) =>
-                                  const ScreenOfCharacterChoice()));
+                                  ScreenOfCharacterChoice(
+                                selectValue: selectValue,
+                              ),
+                            ),
+                          );
+
+                          selectValue = [];
                         },
                         child: const Text("선택완료"),
                       ),
