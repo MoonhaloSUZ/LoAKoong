@@ -218,9 +218,6 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                                 onChanged: (value) {
                                   setState(() {
                                     _select_character_list[index] = value;
-
-                                    //print(data);
-                                    //print(searchedCharacter);
                                   });
                                 },
                               );
@@ -240,20 +237,18 @@ class _LoAKoongScreenState extends State<LoAKoongScreen> {
                       OutlinedButton(
                         onPressed: () {
                           selectedList();
-
-                          int testValue = 0;
                           //새로운 사실을 알았다. onPressed 안에 함수를 순차적으로 실행시킬 수 있음.
-
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  ScreenOfCharacterChoice(
-                                selectValue: selectValue,
-                              ),
-                            ),
-                          );
-
-                          selectValue = [];
+                          print(selectValue);
+                          Navigator.of(context)
+                              .push(
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ScreenOfCharacterChoice(
+                                    selectValue: selectValue,
+                                  ),
+                                ),
+                              )
+                              .then((result) => selectValue = []);
                         },
                         child: const Text("선택완료"),
                       ),
