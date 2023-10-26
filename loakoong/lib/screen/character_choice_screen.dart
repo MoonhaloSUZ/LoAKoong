@@ -60,13 +60,18 @@ class _ScreenOfCharacterChoiceState extends State<ScreenOfCharacterChoice> {
                             //color: Colors.amber,
                             child: Center(
                                 child: Text(
-                                    ' ${data[widget.selectValue[index]]}')),
+                              ' ${data[widget.selectValue[index]]}',
+                            )),
                           );
                         },
 
                         //최상단과 최하단에 구분선을 추가하는 것부터 시작~
                         separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(),
+                            const Divider(
+                          color: Colors.deepPurple,
+                          indent: 22,
+                          endIndent: 22,
+                        ),
                       );
                     }
                     // 데이터 로딩 중인 경우 표시할 위젯
